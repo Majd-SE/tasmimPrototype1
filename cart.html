@@ -34,42 +34,50 @@
   <!-- زر إتمام الطلب -->
   <button id="placeOrderBtn" class="place-order-btn">إتمام الطلب</button>
 
-  <!-- نافذة اختيار الدولة ومكان التوصيل -->
-  <div id="orderModal" class="modal-overlay" style="display:none;">
-    <div class="modal-content">
-      <span class="close-modal" onclick="closeOrderModal()">&times;</span>
-      <h3>اختر الدولة ومكان التوصيل</h3>
-  
-      <label><input type="radio" name="country" value="jordan" checked> الأردن</label>
-      <label><input type="radio" name="country" value="palestine"> فلسطين</label>
-  
-      <div id="jordanArea" class="area-select">
-        <label>اختر المنطقة:</label>
-        <select id="jordanSelect">
-          <option value="عمان">عمان</option>
-          <option value="الزرقاء">الزرقاء</option>
-          <option value="اربد">اربد</option>
-          <option value="العقبة">العقبة</option>
-        </select>
-      </div>
-  
-      <div id="palestineArea" class="area-select" style="display:none;">
-        <label>اختر المنطقة:</label>
-        <select id="palestineSelect">
-          <option value="نابلس">نابلس</option>
-          <option value="الخليل">الخليل</option>
-          <option value="رام الله">رام الله</option>
-          <option value="غزة">غزة</option>
-        </select>
-      </div>
-  
-      <!-- حقل رقم الهاتف -->
-      <label style="margin-top: 15px;">رقم هاتف فعال للتواصل:</label>
-      <input type="tel" id="userPhone" placeholder="أدخل رقم هاتفك" />
-  
-      <button id="sendOrder" class="send-order-btn">إرسال الطلب</button>
+ 
+<!-- نافذة اختيار الدولة ومكان التوصيل -->
+<div id="orderModal" class="modal-overlay" style="display:none;">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+    <h3>اختر الدولة ومكان التوصيل</h3>
+
+    <label><input type="radio" name="country" value="jordan" checked> الأردن</label>
+    <label><input type="radio" name="country" value="palestine"> فلسطين</label>
+
+    <div id="jordanArea" class="area-select">
+      <label>اختر المنطقة:</label>
+      <select id="jordanSelect">
+        <option value="3">عمان</option>
+        <option value="3">الزرقاء</option>
+        <option value="3">اربد</option>
+        <option value="3">العقبة</option>
+        <option value="4">الغور</option>
+      </select>
     </div>
+
+    <div id="palestineArea" class="area-select" style="display:none;">
+      <label>اختر المنطقة:</label>
+      <select id="palestineSelect">
+        <option value="15">نابلس</option>
+        <option value="15">الخليل</option>
+        <option value="15">رام الله</option>
+      </select>
+    </div>
+
+    <!-- حقل اسم العميل -->
+    <label style="margin-top: 15px;">اسمك الكامل:</label>
+    <input type="text" id="userName" placeholder="أدخل اسمك الكامل" />
+
+    <!-- حقل رقم الهاتف -->
+    <label style="margin-top: 15px;">رقم هاتف فعال للتواصل:</label>
+    <input type="tel" id="userPhone" placeholder="أدخل رقم هاتفك" />
+
+    <!-- عرض السعر النهائي -->
+    <p style="margin-top: 20px; font-weight: bold;">السعر النهائي: <span id="finalPrice">0</span> دينار</p>
+
+    <button id="sendOrder" class="send-order-btn">إرسال الطلب</button>
   </div>
+</div>
 
   <!-- نافذة شكر الطلب وتقييم النجوم -->
   <div id="thankYouModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000;">
