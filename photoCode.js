@@ -9,18 +9,18 @@ const leftArrow = document.querySelector(".left-arrow");
 const rightArrow = document.querySelector(".right-arrow");
 const confirmAddToCart = document.getElementById("confirmAddToCart");
 
+// إخفاء شاشة التحميل عند تحميل الصفحة
 window.addEventListener('load', () => {
   const loadingScreen = document.getElementById('loadingScreen');
-  loadingScreen.style.display = 'none';  // تخفي شاشة التحميل بعد تحميل الصفحة
+  loadingScreen.style.display = 'none';
 });
-
 
 let productImages = [];
 let currentImageIndex = 0;
 let selectedColor = "";
 let selectedSize = "";
 
-// دالة عرض رسالة التوست
+// رسالة التوست
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
@@ -32,10 +32,10 @@ function showToast(message) {
     setTimeout(() => {
       toast.style.visibility = "hidden";
     }, 500);
-  }, 2000); // تظهر الرسالة لمدة ثانيتين
+  }, 2000);
 }
 
-// تحديث الصورة مع تأثيرات fade
+// تحديث الصورة
 function updateImage(newIndex) {
   mainImage.classList.add("fade-out");
   setTimeout(() => {
@@ -49,19 +49,18 @@ function updateImage(newIndex) {
   }, 300);
 }
 
-// فتح المودال مع تحميل بيانات المنتج
+// فتح المودال
 function openModal(product) {
   modal.style.display = "flex";
   modal.classList.remove("fade-out");
   modal.classList.add("fade-in");
 
   productNameEl.textContent = product.name;
-
   productImages = product.images;
   currentImageIndex = 0;
   mainImage.src = productImages[currentImageIndex];
 
-  // إعداد أزرار الألوان
+  // الألوان
   colorContainer.innerHTML = "";
   product.colors.forEach(color => {
     const btn = document.createElement("button");
@@ -75,7 +74,7 @@ function openModal(product) {
     colorContainer.appendChild(btn);
   });
 
-  // إعداد أزرار المقاسات
+  // المقاسات
   sizeContainer.innerHTML = "";
   product.sizes.forEach(size => {
     const btn = document.createElement("button");
@@ -90,12 +89,11 @@ function openModal(product) {
   });
 
   window.productPrice = product.price || "غير محدد";
-
   selectedColor = "";
   selectedSize = "";
 }
 
-// إغلاق المودال مع تأثير fade
+// إغلاق المودال عند الضغط على X
 closeModal.addEventListener("click", () => {
   modal.classList.remove("fade-in");
   modal.classList.add("fade-out");
@@ -104,7 +102,18 @@ closeModal.addEventListener("click", () => {
   }, 300);
 });
 
-// التحكم بأسهم تغيير الصور
+// إغلاق المودال عند الضغط خارج المودال
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.classList.remove("fade-in");
+    modal.classList.add("fade-out");
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 300);
+  }
+});
+
+// أسهم الصور
 leftArrow.addEventListener("click", () => {
   let newIndex = (currentImageIndex - 1 + productImages.length) % productImages.length;
   updateImage(newIndex);
@@ -114,7 +123,31 @@ rightArrow.addEventListener("click", () => {
   updateImage(newIndex);
 });
 
-// زر إضافة المنتج للسلة مع التحقق من الاختيارات وحفظ في localStorage
+// دعم السحب لتغيير الصور
+let touchStartX = 0;
+let touchEndX = 0;
+
+mainImage.addEventListener("touchstart", (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+mainImage.addEventListener("touchend", (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+function handleSwipe() {
+  const diff = touchStartX - touchEndX;
+  if (diff > 50) {
+    let newIndex = (currentImageIndex + 1) % productImages.length;
+    updateImage(newIndex);
+  } else if (diff < -50) {
+    let newIndex = (currentImageIndex - 1 + productImages.length) % productImages.length;
+    updateImage(newIndex);
+  }
+}
+
+// إضافة للسلة
 confirmAddToCart.addEventListener("click", () => {
   if (!selectedColor || !selectedSize) {
     alert("يرجى اختيار اللون والمقاس");
@@ -142,7 +175,7 @@ confirmAddToCart.addEventListener("click", () => {
   }, 300);
 });
 
-// فتح المودال عند الضغط على أزرار view وتحميل بيانات المنتج من data attributes
+// عرض المنتج من زر view
 document.querySelectorAll(".bu1").forEach(button => {
   button.addEventListener("click", () => {
     const product = {
@@ -156,25 +189,22 @@ document.querySelectorAll(".bu1").forEach(button => {
   });
 });
 
-// دعم السحب (swipe) لتغيير الصور على الهواتف
-let touchStartX = 0;
-let touchEndX = 0;
+// عرض المنتج عند الضغط على الكرت كامل
+document.querySelectorAll(".clickable-card").forEach(card => {
+  card.addEventListener("click", (e) => {
+    // حتى ما يشتغل لما نضغط على زر view نفسه
+    if (e.target.tagName.toLowerCase() === "button") return;
 
-mainImage.addEventListener("touchstart", (e) => {
-  touchStartX = e.changedTouches[0].screenX;
-});
-mainImage.addEventListener("touchend", (e) => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleSwipe();
-});
+    const btn = card.querySelector(".bu1");
+    if (!btn) return;
 
-function handleSwipe() {
-  const diff = touchStartX - touchEndX;
-  if (diff > 50) {
-    let newIndex = (currentImageIndex + 1) % productImages.length;
-    updateImage(newIndex);
-  } else if (diff < -50) {
-    let newIndex = (currentImageIndex - 1 + productImages.length) % productImages.length;
-    updateImage(newIndex);
-  }
-}
+    const product = {
+      name: btn.getAttribute("data-name"),
+      images: JSON.parse(btn.getAttribute("data-images")),
+      colors: JSON.parse(btn.getAttribute("data-colors")),
+      sizes: JSON.parse(btn.getAttribute("data-sizes")),
+      price: btn.getAttribute("data-price") || "غير محدد"
+    };
+    openModal(product);
+  });
+});
