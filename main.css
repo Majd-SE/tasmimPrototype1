@@ -1,0 +1,487 @@
+/* 🟤 الهيدر */
+body{
+  align-items: center;
+  align-content: center;
+  text-align: center;
+}
+.main-header {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.main-header .container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: ltr;
+}
+
+.logo {
+  height: 50px;
+  width: auto;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #b27d5b;
+}
+
+
+/* 📱 ميديا كويري للهيدر */
+@media (max-width: 768px) {
+  .main-header .container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .logo {
+    height: 45px;
+  }
+
+  .nav-links {
+    gap: 10px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+  }
+}
+
+
+/* 🛒 السلة العائمة */
+.bags{
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+.floating-cart {
+  position: fixed;
+  bottom: 50px;
+  right: 20px;
+  background-color: #bd0505e5;
+  color: white;
+  font-size: 20px;
+  padding: 12px 14px;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 9999;
+  transition: background-color 0.3s;
+}
+
+.floating-cart:hover {
+  background-color: #640000;
+}
+
+
+/* 🛍️ المنتجات */
+.pr1,.pr2 {
+  border: 1px solid #ccc;
+  padding: 10px 3px 0px 3px;
+  border-radius: 10px;
+  text-align: center;
+  width: 17%;
+  height: 430px;
+  margin: 1%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: inline-block;
+  vertical-align: top;
+  background-color: #fff;
+}
+
+.ph1,.ph2 {
+  width: 94%;
+  height: 80%;
+  border-radius: 8px;
+  object-fit: cover;
+  image-rendering: crisp-edges;
+}
+
+.n1,.n2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 3px 0 0px;
+}
+
+.m1,.m2 {
+  font-size: 16px;
+  color: #888;
+  margin: 2px 0 2px;
+
+}
+
+.bu1,.bu2 {
+  background-color: #910707;
+  color: white;
+  border: none;
+  padding: 5px 50px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 30px;
+  width: 70%;
+}
+
+.bu1:hover, .bu2:hover {
+  background-color: #333;
+}
+
+
+/* 🎨 ألوان المنتج */
+.color,.color2 {
+  height: 20px;
+  width: 100px;
+  padding-left: 30%;
+  display: flex;
+  margin-bottom: 5%;
+  justify-content: space-evenly;
+}
+
+.c1, .c2, .c3, .c1_2, .c2_3, .c3_4 {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.c1 { background-color: red; }
+.c2 { background-color: rgb(0, 94, 255); }
+.c3 { background-color: white; }
+.c1_2 { background-color: rgb(255, 0, 0); }
+.c2_3 { background-color: rgb(0, 94, 255); }
+.c3_4 { background-color: rgb(237, 192, 45); }
+
+
+/* 📱 ميديا كويري للموبايل */
+@media (max-width: 768px) {
+  .pr1, .pr2 {
+    width: 150px;
+    height: 300px;
+    margin-left: 15px;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .ph1, .ph2 {
+    width: 145px;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .n1, .n2 {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .m1, .m2 {
+    font-size: 14px;
+    color: #777;
+  }
+
+  .bu1, .bu2 {
+    font-size: 13px;
+    width: 140px;
+  }
+}
+
+
+/* 📩 الفوتر */
+.footer {
+  background-color:#a70000 ;
+  color:white ;
+  padding: 30px 20px;
+  font-family: 'Arial', sans-serif;
+  direction: rtl;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-section h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #f0c28b;
+}
+
+.footer-section a {
+  color: #ddd;
+  text-decoration: none;
+}
+
+.footer-section a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 15px;
+  font-size: 14px;
+  color: #aaa;
+  border-top: 1px solid #444;
+}
+
+
+/* 🧩 المودال لاختيار اللون والمقاس */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-popup {
+  background: #fff;
+  border-radius: 10px;
+  width: 66%;
+  max-width: 400px;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px; /* اقصى عرض */
+  padding: 20px;
+  position: fixed;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  max-height: 90vh;
+  overflow-y: auto; /* إذا المحتوى طويل يطلع scroll */
+}
+/* أنيميشن للباب أب */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-overlay {
+  display: none; /* بيصير flex من JS */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  animation: fadeInScale 0.4s ease forwards;
+  position: relative;
+}
+
+#mainModalImage {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain; /* الصورة تظهر كاملة بدون تشويه */
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+.close-modal {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  font-size: 30px;
+  cursor: pointer;
+  color: #333;
+}
+
+.modal-image-container {
+  margin-top: 10px; /* تحرك الصورة لأسفل 20px */
+  margin-bottom: 10px;
+  text-align: center; /* تركز الصورة أفقياً */
+  margin-left: 3%;
+  margin-right: 12%;
+}
+
+.modal-image {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  margin-left: 5%;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  font-size: 24px;
+  padding: 10px 9px;
+  cursor: pointer;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.left-arrow {
+  left: -17px;
+  width: 29px;
+  
+}
+.right-arrow {
+  right: -40px;
+  width: 29px;
+}
+
+.option-section {
+  margin-top: 15px;
+  text-align: right;
+}
+
+/* الحاوية التي تحتوي الأزرار: ألوان أو مقاسات */
+.color-options,
+.size-options {
+  display: flex;
+  justify-content: center; /* يوسّط الأزرار أفقياً */
+  gap: 10px;                /* مسافة بين الأزرار */
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+/* تنسيق الأزرار نفسها */
+.color-options button{  
+  padding: 8px 16px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f8f8f8;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 12px;
+  margin-top: 20px;}
+
+.size-options button {
+  padding: 8px 16px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f8f8f8;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+/* الزر المحدد */
+.color-options button.selected,
+.size-options button.selected {
+  background-color: #b48c45;
+  color: #fff;
+  border-color: #000;
+}
+
+.add-to-cart-btn {
+  margin-top: 15px;
+  padding: 10px 25px;
+  background-color: #b48c45;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeOutScale {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* حالة عند الإغلاق */
+.modal-content.closing {
+  animation: fadeOutScale 0.3s ease forwards;
+}
+/* أنيميشن الفيد إن والآوت */
+#productModal.fade-in {
+  animation: fadeIn 0.3s forwards;
+}
+
+#productModal.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
+
+#mainModalImage.fade-in {
+  animation: fadeIn 0.3s forwards;
+}
+
+#mainModalImage.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeOut {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}

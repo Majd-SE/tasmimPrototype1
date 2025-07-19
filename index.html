@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <title>tasmim emboiery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <!-- في بداية الـ body -->
+<div id="loadingScreen" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:#710000; display:flex; justify-content:center; align-items:center; color:#fff; font-size:24px; z-index:9999;">
+  <div>
+    <img src="24 (3).gif" alt="جاري التحميل..." style="width:50px; display:block; margin: 0 auto 15px;" />
+    جاري تحميل الموقع...
+  </div>
+</div>
+
+  <header class="main-header">
+    <!-- مكان زر الترجمة -->
+<div id="google_translate_element"></div>
+
+<!-- تحميل سكريبت الترجمة -->
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'ar',   // لغة موقعك الأساسية
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+  }
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <div class="container">
+      <img src="logo.png" alt="شعار الموقع" class="logo">
+      <nav class="nav-links">
+        <a href="#home">الرئيسية</a>
+        <a href="#about">من نحن</a>
+        <a href="#contact">تواصل معنا</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- أيقونة السلة -->
+  <a href="cart.html" class="floating-cart">
+    <img src="bags.png" alt="🛒" class="bags" />
+  </a>
+
+  <!-- المنتجات -->
+  <div class="pr1">
+    <img class="ph1" src="ph1.jpg" alt="noPhoto.jpg">
+    <div class="pi1">
+      <p class="n1">عباية كلاسيك</p>
+      <p class="m1">27 JD</p>
+    </div>
+    <button class="bu1" 
+      data-name="عباية كلاسيك" 
+      data-images='["ph1.jpg", "ph1-b.jpg", "ph1-p.jpg"]' 
+      data-colors='["أحمر", "خمري", "أزرق"]' 
+      data-sizes='["S", "M", "L", "XL"]'
+      data-price="27" 
+      type="button">view</button>
+  </div>
+
+  <div class="pr2">
+    <img class="ph2" src="ph2Blue.jpg" alt="noPhoto.jpg">
+    <div class="pi2">
+      <p class="n2">ثوب الطلس الكامل</p>
+      <p class="m2">50 JD</p>
+    </div>
+    <button class="bu1" 
+      data-name="ثوب الطلس الكامل" 
+      data-images='["ph2Blue.jpg", "ph2Gold.jpg", "ph2Red.jpg"]' 
+      data-colors='["أحمر", "ذهبي", "أزرق"]' 
+      data-sizes='["S", "M", "L", "XL"]'         
+      data-price="50" 
+      type="button">view</button>
+  </div>
+
+  <div class="pr1">
+    <img class="ph1" src="ph3.jpg" alt="noPhoto.jpg">
+    <div class="pi1">
+      <p class="n1">ثوب السمكة</p>
+      <p class="m1">50 JD</p>
+    </div>
+    <button class="bu1" 
+      data-name="ثوب السمكة" 
+      data-images='["ph3.jpg" , "ph3B.jpg" , "ph3R.jpg" , "ph3w.jpg"]' 
+      data-colors='["خمري-سكني", "أحمر-اسود", "أزرق-ابيض","بيج-خمري"]' 
+      data-sizes='["M", "L", "S"]'
+      data-price="50" 
+      type="button">view</button>
+  </div>
+
+  <div class="pr1">
+    <img class="ph1" src="ph4g.jpg" alt="noPhoto.jpg">
+    <div class="pi1">
+      <p class="n1">جاكيت الطلس الكامل</p>
+      <p class="m1">30 JD</p>
+    </div>
+    <button class="bu1" 
+      data-name="جاكيت الطلس الكامل" 
+      data-images='["ph4g.jpg","ph4g2.jpg","ph4r.jpg","ph4r2.jpg","ph4dr.jpg","ph4dr2.jpg","ph4p.jpg","ph4p2.jpg"]'
+
+      data-colors='["أحمر", "خمري","ذهبي","زهري"]' 
+      data-sizes='["S", "M","L","XL"]'
+      data-price="30" 
+      type="button">view</button>
+  </div>
+
+  <!-- مودال المنتج -->
+  <div id="productModal" class="modal-overlay" style="display:none;">
+    <div class="modal-popup">
+      <span class="close-modal">&times;</span>
+      <h2 id="modalProductName"></h2>
+      <div class="modal-image-container" style="position:relative; text-align:center;">
+        <button class="arrow left-arrow">&#10094;</button>
+        <img src="" alt="منتج" id="mainModalImage" class="modal-image" />
+        <button class="arrow right-arrow">&#10095;</button>
+      </div>
+
+      <div class="option-section color-options" id="modalColors"></div>
+      <div class="option-section size-options" id="modalSizeContainer"></div>
+
+      <button id="confirmAddToCart" class="add-to-cart-btn">أضف إلى السلة</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section social">
+        <h3>تابعنا</h3>
+        <a href="https://www.instagram.com/tasmim_emboiery?igsh=c3g4bG96a2p3OHdy" target="_blank">📷 Instagram</a><br>
+        <a href="https://www.facebook.com/share/1CkZgZhb3V/" target="_blank">📘 Facebook</a><br>
+        <a href="https://wa.me/962790000000" target="_blank">💬 WhatsApp</a>
+        <p>📞 الهاتف: <a href="tel:+962790000000">+962 79 000 0000</a></p>
+      </div>
+      <div class="footer-section info">
+        <h3>حول المتجر</h3>
+        <p>نُقدّم عبايات بتصاميم عصرية وجودة عالية، مع خدمة توصيل سريعة داخل الاردن وفلسطين.</p>
+      </div>
+      <div class="footer-section contact">
+        <h3>تواصل معنا</h3>
+        <p>📧 البريد الإلكتروني لمصمم الموقع : <a href="mailto:majdalmajali099@gmail.com">majdalmajali099@gmail.com</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>جميع الحقوق محفوظة &copy; 2025</p>
+    </div>
+  </footer>
+  <div id="toast" style="
+  visibility: hidden;
+  min-width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 10px;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+">تمت الإضافة إلى السلة</div>
+
+  <script src="photoCode.js"></script>
+</body>
+</html>

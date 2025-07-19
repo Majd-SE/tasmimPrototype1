@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>سلة التسوق</title>
+  <link rel="stylesheet" href="cart.css" />
+</head>
+<body>
+
+  <header>
+    <h1>سلة التسوق</h1>
+    <div class="floating-cart" onclick="window.location.href='index.html'">
+      <img src="bags.png" alt="🛒" class="bags" />
+    </div>
+  </header>
+
+  <main>
+    <!-- زر العودة للتسوق ثابت بأول الصفحة -->
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="index.html" class="back-to-shop" id="back">العودة للتسوق</a>
+    </div>
+  
+    <!-- المنتجات المعروضة في السلة -->
+    <div id="cartItemsContainer"></div>
+  
+    <!-- رسالة السلة الفارغة -->
+    <div id="emptyMessage" style="display:none; text-align:center; margin-top:50px; font-size:18px;">
+      سلة التسوق فارغة.
+    </div>
+  </main>
+
+  <!-- زر إتمام الطلب -->
+  <button id="placeOrderBtn" class="place-order-btn">إتمام الطلب</button>
+
+  <!-- نافذة اختيار الدولة ومكان التوصيل -->
+  <div id="orderModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+      <h3>اختر الدولة ومكان التوصيل</h3>
+  
+      <label><input type="radio" name="country" value="jordan" checked> الأردن</label>
+      <label><input type="radio" name="country" value="palestine"> فلسطين</label>
+  
+      <div id="jordanArea" class="area-select">
+        <label>اختر المنطقة:</label>
+        <select id="jordanSelect">
+          <option value="عمان">عمان</option>
+          <option value="الزرقاء">الزرقاء</option>
+          <option value="اربد">اربد</option>
+          <option value="العقبة">العقبة</option>
+        </select>
+      </div>
+  
+      <div id="palestineArea" class="area-select" style="display:none;">
+        <label>اختر المنطقة:</label>
+        <select id="palestineSelect">
+          <option value="نابلس">نابلس</option>
+          <option value="الخليل">الخليل</option>
+          <option value="رام الله">رام الله</option>
+          <option value="غزة">غزة</option>
+        </select>
+      </div>
+  
+      <!-- حقل رقم الهاتف -->
+      <label style="margin-top: 15px;">رقم هاتف فعال للتواصل:</label>
+      <input type="tel" id="userPhone" placeholder="أدخل رقم هاتفك" />
+  
+      <button id="sendOrder" class="send-order-btn">إرسال الطلب</button>
+    </div>
+  </div>
+
+  <!-- نافذة شكر الطلب وتقييم النجوم -->
+  <div id="thankYouModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000;">
+    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; max-width: 320px; position: relative;">
+      <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Thank You" style="width: 80px; margin-bottom: 15px;">
+      <h2 style="margin-bottom: 10px;">شكرًا لك على طلبك!</h2>
+      <p>تم استلام طلبك بنجاح، وسنتواصل معك قريبًا لتأكيد التفاصيل.</p>
+  
+      <!-- تقييم النجوم -->
+      <div style="margin: 20px 0;">
+       <p>كيف كانت تجربتك مع موقعنا؟</p>      
+        <div id="starRating" style="font-size: 30px; cursor: pointer; user-select: none;">
+          <span data-value="1">☆</span>
+          <span data-value="2">☆</span>
+          <span data-value="3">☆</span>
+          <span data-value="4">☆</span>
+          <span data-value="5">☆</span>
+        </div>
+      </div>
+  
+      <button id="closeThankYou" style="margin-top: 20px; padding: 8px 20px; background-color: #710000; color: white; border: none; border-radius: 5px; cursor: pointer;">إغلاق</button>
+    </div>
+  </div>
+
+  <script src="cart.js"></script>
+</body>
+</html>
