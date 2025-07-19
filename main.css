@@ -3,6 +3,8 @@ body{
   align-items: center;
   align-content: center;
   text-align: center;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 .main-header {
   background-color: #fff;
@@ -176,9 +178,10 @@ body{
 /* 📱 ميديا كويري للموبايل */
 @media (max-width: 768px) {
   .pr1, .pr2 {
-    width: 150px;
+    width: 130px;
     height: 300px;
-    margin-left: 15px;
+    margin-left: 0px;
+    margin-right: 0;
     padding: 5px;
     background-color: #f9f9f9;
     border-radius: 10px;
@@ -186,7 +189,7 @@ body{
   }
 
   .ph1, .ph2 {
-    width: 145px;
+    width: 130px;
     height: 200px;
     object-fit: cover;
   }
@@ -202,8 +205,9 @@ body{
   }
 
   .bu1, .bu2 {
+    margin-top: 10px;
     font-size: 13px;
-    width: 140px;
+    width: 120px;
   }
 }
 
@@ -274,7 +278,8 @@ body{
 .modal-popup {
   background: #fff;
   border-radius: 10px;
-  width: 66%;
+  width: 80%;
+  height: 90%;
   max-width: 400px;
   padding: 10px;
   position: relative;
@@ -430,7 +435,7 @@ body{
 }
 
 .add-to-cart-btn {
-  margin-top: 15px;
+  margin-top: 50px;
   padding: 10px 25px;
   background-color: #b48c45;
   color: white;
