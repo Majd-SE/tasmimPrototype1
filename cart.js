@@ -2,6 +2,7 @@ let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
 const container = document.getElementById("cartItemsContainer");
 const emptyMessage = document.getElementById("emptyMessage");
+const finalPriceEl = document.getElementById("finalPrice");
 
 function calculateTotal() {
   let total = 0;
@@ -9,7 +10,7 @@ function calculateTotal() {
     let priceNum = parseFloat(item.price.replace(/[^\d.]/g, "")) || 0;
     total += priceNum;
   });
-  return total.toFixed(2);
+  return total;
 }
 
 function displayCart() {
@@ -42,7 +43,7 @@ function displayCart() {
 
   const totalPriceEl = document.createElement("div");
   totalPriceEl.classList.add("total-price");
-  totalPriceEl.textContent = "الإجمالي: " + calculateTotal() + " JD";
+  totalPriceEl.textContent = "الإجمالي: " + calculateTotal().toFixed(2) + " JD";
   container.appendChild(totalPriceEl);
 
   document.querySelectorAll(".remove-btn").forEach(btn => {
@@ -57,9 +58,36 @@ function displayCart() {
 
 displayCart();
 
-// فتح الدايالوق
+// دالة لحساب التكلفة الإضافية حسب المنطقة
+function getAreaExtraCost() {
+  const country = document.querySelector('input[name="country"]:checked').value;
+  let extra = 0;
+
+  if (country === "jordan") {
+    const jordanSelect = document.getElementById("jordanSelect");
+    extra = parseFloat(jordanSelect.options[jordanSelect.selectedIndex].value) || 0;
+  } else if (country === "palestine") {
+    const palestineSelect = document.getElementById("palestineSelect");
+    extra = parseFloat(palestineSelect.options[palestineSelect.selectedIndex].value) || 0;
+  }
+
+  return extra;
+}
+
+// تحديث السعر النهائي في المودال
+function updateFinalPrice() {
+  const total = calculateTotal();
+  const extra = getAreaExtraCost();
+  const finalPrice = total + extra;
+  if (finalPriceEl) {
+    finalPriceEl.textContent = finalPrice.toFixed(2);
+  }
+}
+
+// فتح الدايالوق مع تحديث السعر
 document.getElementById("placeOrderBtn").addEventListener("click", () => {
   document.getElementById("orderModal").style.display = "flex";
+  updateFinalPrice();
 });
 
 // إغلاق الدايالوق
@@ -67,14 +95,19 @@ function closeOrderModal() {
   document.getElementById("orderModal").style.display = "none";
 }
 
-// تبديل حسب البلد
+// تبديل حسب البلد وتحديث السعر
 document.querySelectorAll('input[name="country"]').forEach(radio => {
   radio.addEventListener("change", function () {
     const country = this.value;
     document.getElementById("jordanArea").style.display = country === "jordan" ? "block" : "none";
     document.getElementById("palestineArea").style.display = country === "palestine" ? "block" : "none";
+    updateFinalPrice();
   });
 });
+
+// تحديث السعر عند تغيير المنطقة
+document.getElementById("jordanSelect").addEventListener("change", updateFinalPrice);
+document.getElementById("palestineSelect").addEventListener("change", updateFinalPrice);
 
 // التوكن ورقم المحادثة (chat_id) لتليجرام:
 const TELEGRAM_BOT_TOKEN = "7908763432:AAFcY0MyQLFedrBcL4JVp0lAZee4IMOK3Do";
@@ -91,9 +124,9 @@ document.getElementById("sendOrder").addEventListener("click", () => {
   let location = "";
 
   if (country === "jordan") {
-    location = document.getElementById("jordanSelect").value;
+    location = document.getElementById("jordanSelect").options[document.getElementById("jordanSelect").selectedIndex].text;
   } else {
-    location = document.getElementById("palestineSelect").value;
+    location = document.getElementById("palestineSelect").options[document.getElementById("palestineSelect").selectedIndex].text;
   }
 
   const phone = document.getElementById("userPhone").value.trim();
@@ -101,6 +134,11 @@ document.getElementById("sendOrder").addEventListener("click", () => {
     alert("يرجى إدخال رقم الهاتف");
     return;
   }
+
+  // حساب السعر النهائي مع الإضافة
+  const total = calculateTotal();
+  const extra = getAreaExtraCost();
+  const finalPrice = total + extra;
 
   // تجهيز رسالة الطلب
   let message = `طلب جديد من ${country === "jordan" ? "الأردن" : "فلسطين"}\n`;
@@ -113,11 +151,9 @@ document.getElementById("sendOrder").addEventListener("click", () => {
     message += `اللون: ${item.color}, المقاس: ${item.size}, السعر: ${item.price}\n\n`;
   });
 
-  const total = cart.reduce((sum, item) => {
-    let p = parseFloat(item.price.replace(/[^\d.]/g, "")) || 0;
-    return sum + p;
-  }, 0);
-  message += `الإجمالي: ${total.toFixed(2)} JD`;
+  message += `الإجمالي: ${total.toFixed(2)} JD\n`;
+  message += `تكلفة التوصيل حسب المنطقة: ${extra.toFixed(2)} JD\n`;
+  message += `السعر النهائي: ${finalPrice.toFixed(2)} JD`;
 
   // إرسال الرسالة لتليجرام عبر API بوت
   fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
