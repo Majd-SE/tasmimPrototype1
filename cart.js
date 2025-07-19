@@ -58,7 +58,6 @@ function displayCart() {
 
 displayCart();
 
-// ========== السعر النهائي ==========
 function getAreaExtraCost() {
   const country = document.querySelector('input[name="country"]:checked').value;
   let extra = 0;
@@ -83,7 +82,6 @@ function updateFinalPrice() {
   }
 }
 
-// ========== فتح المودال ==========
 document.getElementById("placeOrderBtn").addEventListener("click", () => {
   document.getElementById("orderModal").style.display = "flex";
   updateFinalPrice();
@@ -105,9 +103,9 @@ document.querySelectorAll('input[name="country"]').forEach(radio => {
 document.getElementById("jordanSelect").addEventListener("change", updateFinalPrice);
 document.getElementById("palestineSelect").addEventListener("change", updateFinalPrice);
 
-// ========== إعدادات تلجرام ==========
+// Telegram Bot Info
 const TELEGRAM_BOT_TOKEN = "7908763432:AAFcY0MyQLFedrBcL4JVp0lAZee4IMOK3Do";
-const TELEGRAM_CHAT_ID = "-1002472660040"; // ID القروب
+const TELEGRAM_CHAT_ID = "-100xxxxxxxxxx"; // عدله إلى ID القروب الصحيح
 
 document.getElementById("sendOrder").addEventListener("click", () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -116,43 +114,42 @@ document.getElementById("sendOrder").addEventListener("click", () => {
     return;
   }
 
+  const name = document.getElementById("userName").value.trim();
+  const phone = document.getElementById("userPhone").value.trim();
   const country = document.querySelector('input[name="country"]:checked').value;
   let location = "";
-  if (country === "jordan") {
-    location = document.getElementById("jordanSelect").selectedOptions[0].text;
-  } else {
-    location = document.getElementById("palestineSelect").selectedOptions[0].text;
+
+  if (!name || !phone) {
+    alert("يرجى إدخال الاسم ورقم الهاتف");
+    return;
   }
 
-  const phone = document.getElementById("userPhone").value.trim();
-  if (!phone) {
-    alert("يرجى إدخال رقم الهاتف");
-    return;
+  if (country === "jordan") {
+    location = document.getElementById("jordanSelect").options[document.getElementById("jordanSelect").selectedIndex].text;
+  } else {
+    location = document.getElementById("palestineSelect").options[document.getElementById("palestineSelect").selectedIndex].text;
   }
 
   const total = calculateTotal();
   const extra = getAreaExtraCost();
   const finalPrice = total + extra;
 
-  // ========== الرسالة ==========
-  let message = `📦 *طلب جديد من الموقع:*\n`;
+  let message = `📦 *طلب جديد من الموقع*\n`;
   message += `📍 *البلد:* ${country === "jordan" ? "الأردن" : "فلسطين"}\n`;
   message += `🏘️ *المنطقة:* ${location}\n`;
+  message += `👤 *الاسم:* ${name}\n`;
   message += `📞 *رقم الهاتف:* ${phone}\n\n`;
   message += `🛍️ *المنتجات:*\n`;
 
   cart.forEach((item, idx) => {
-    message += `\n#${idx + 1} - ${item.name}\n`;
-    message += `- اللون: ${item.color}\n`;
-    message += `- المقاس: ${item.size}\n`;
-    message += `- السعر: ${item.price}\n`;
+    message += `#${idx + 1} - ${item.name}\n`;
+    message += `اللون: ${item.color}, المقاس: ${item.size}, السعر: ${item.price}\n\n`;
   });
 
-  message += `\n💰 *الإجمالي:* ${total.toFixed(2)} JD`;
-  message += `\n🚚 *التوصيل:* ${extra.toFixed(2)} JD`;
-  message += `\n🧾 *السعر النهائي:* ${finalPrice.toFixed(2)} JD`;
+  message += `💰 *الإجمالي:* ${total.toFixed(2)} JD\n`;
+  message += `🚚 *التوصيل:* ${extra.toFixed(2)} JD\n`;
+  message += `🧾 *السعر النهائي:* ${finalPrice.toFixed(2)} JD`;
 
-  // إرسال الرسالة
   fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -170,21 +167,54 @@ document.getElementById("sendOrder").addEventListener("click", () => {
       displayCart();
       closeOrderModal();
     } else {
-      alert("فشل في إرسال الطلب.");
+      alert("حدث خطأ أثناء إرسال الطلب.");
       console.error(data);
     }
   })
   .catch(err => {
-    alert("خطأ بالاتصال. حاول لاحقاً.");
+    alert("فشل الاتصال بتليجرام.");
     console.error(err);
   });
 });
 
-// ========== التقييم ==========
+// تقييم النجوم
+const starRating = document.getElementById("starRating");
+let selectedRating = 0;
+
+if (starRating) {
+  const stars = starRating.querySelectorAll("span");
+
+  stars.forEach(star => {
+    star.addEventListener("mouseenter", () => {
+      const val = parseInt(star.getAttribute("data-value"));
+      highlightStars(val);
+    });
+
+    star.addEventListener("mouseleave", () => {
+      highlightStars(selectedRating);
+    });
+
+    star.addEventListener("click", () => {
+      selectedRating = parseInt(star.getAttribute("data-value"));
+      highlightStars(selectedRating);
+    });
+  });
+
+  function highlightStars(rating) {
+    stars.forEach(star => {
+      const val = parseInt(star.getAttribute("data-value"));
+      star.textContent = val <= rating ? "★" : "☆";
+      star.style.color = val <= rating ? "#f39c12" : "black";
+    });
+  }
+
+  highlightStars(0);
+}
+
 document.getElementById("closeThankYou").addEventListener("click", () => {
-  const ratingMessage = selectedRating
-    ? `⭐ تم تقييم الطلب: ${selectedRating} نجوم`
-    : "📭 لم يتم تقييم الطلب";
+  let ratingMessage = selectedRating === 0
+    ? "التقييم: لم يتم التقييم"
+    : `التقييم: ${selectedRating} من 5 نجوم`;
 
   fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: "POST",
@@ -193,33 +223,7 @@ document.getElementById("closeThankYou").addEventListener("click", () => {
       chat_id: TELEGRAM_CHAT_ID,
       text: ratingMessage
     })
-  })
-  .finally(() => {
+  }).finally(() => {
     document.getElementById("thankYouModal").style.display = "none";
   });
 });
-
-const starRating = document.getElementById("starRating");
-let selectedRating = 0;
-
-if (starRating) {
-  const stars = starRating.querySelectorAll("span");
-  stars.forEach(star => {
-    star.addEventListener("mouseenter", () => highlightStars(parseInt(star.dataset.value)));
-    star.addEventListener("mouseleave", () => highlightStars(selectedRating));
-    star.addEventListener("click", () => {
-      selectedRating = parseInt(star.dataset.value);
-      highlightStars(selectedRating);
-    });
-  });
-
-  function highlightStars(rating) {
-    stars.forEach(star => {
-      const val = parseInt(star.dataset.value);
-      star.textContent = val <= rating ? "★" : "☆";
-      star.style.color = val <= rating ? "#f39c12" : "#000";
-    });
-  }
-
-  highlightStars(0);
-}
