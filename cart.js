@@ -58,23 +58,22 @@ function displayCart() {
 
 displayCart();
 
-// دالة لحساب التكلفة الإضافية حسب المنطقة
+// ========== السعر النهائي ==========
 function getAreaExtraCost() {
   const country = document.querySelector('input[name="country"]:checked').value;
   let extra = 0;
 
   if (country === "jordan") {
     const jordanSelect = document.getElementById("jordanSelect");
-    extra = parseFloat(jordanSelect.options[jordanSelect.selectedIndex].value) || 0;
+    extra = parseFloat(jordanSelect.value) || 0;
   } else if (country === "palestine") {
     const palestineSelect = document.getElementById("palestineSelect");
-    extra = parseFloat(palestineSelect.options[palestineSelect.selectedIndex].value) || 0;
+    extra = parseFloat(palestineSelect.value) || 0;
   }
 
   return extra;
 }
 
-// تحديث السعر النهائي في المودال
 function updateFinalPrice() {
   const total = calculateTotal();
   const extra = getAreaExtraCost();
@@ -84,18 +83,16 @@ function updateFinalPrice() {
   }
 }
 
-// فتح الدايالوق مع تحديث السعر
+// ========== فتح المودال ==========
 document.getElementById("placeOrderBtn").addEventListener("click", () => {
   document.getElementById("orderModal").style.display = "flex";
   updateFinalPrice();
 });
 
-// إغلاق الدايالوق
 function closeOrderModal() {
   document.getElementById("orderModal").style.display = "none";
 }
 
-// تبديل حسب البلد وتحديث السعر
 document.querySelectorAll('input[name="country"]').forEach(radio => {
   radio.addEventListener("change", function () {
     const country = this.value;
@@ -105,13 +102,12 @@ document.querySelectorAll('input[name="country"]').forEach(radio => {
   });
 });
 
-// تحديث السعر عند تغيير المنطقة
 document.getElementById("jordanSelect").addEventListener("change", updateFinalPrice);
 document.getElementById("palestineSelect").addEventListener("change", updateFinalPrice);
 
-// التوكن ورقم المحادثة (chat_id) لتليجرام:
+// ========== إعدادات تلجرام ==========
 const TELEGRAM_BOT_TOKEN = "7908763432:AAFcY0MyQLFedrBcL4JVp0lAZee4IMOK3Do";
-const TELEGRAM_CHAT_ID = "7359956200";
+const TELEGRAM_CHAT_ID = "-1002472660040"; // ID القروب
 
 document.getElementById("sendOrder").addEventListener("click", () => {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -122,11 +118,10 @@ document.getElementById("sendOrder").addEventListener("click", () => {
 
   const country = document.querySelector('input[name="country"]:checked').value;
   let location = "";
-
   if (country === "jordan") {
-    location = document.getElementById("jordanSelect").options[document.getElementById("jordanSelect").selectedIndex].text;
+    location = document.getElementById("jordanSelect").selectedOptions[0].text;
   } else {
-    location = document.getElementById("palestineSelect").options[document.getElementById("palestineSelect").selectedIndex].text;
+    location = document.getElementById("palestineSelect").selectedOptions[0].text;
   }
 
   const phone = document.getElementById("userPhone").value.trim();
@@ -135,89 +130,71 @@ document.getElementById("sendOrder").addEventListener("click", () => {
     return;
   }
 
-  // حساب السعر النهائي مع الإضافة
   const total = calculateTotal();
   const extra = getAreaExtraCost();
   const finalPrice = total + extra;
 
-  // تجهيز رسالة الطلب
-  let message = `طلب جديد من ${country === "jordan" ? "الأردن" : "فلسطين"}\n`;
-  message += `المنطقة: ${location}\n`;
-  message += `رقم الهاتف: ${phone}\n\n`;
-  message += `المنتجات:\n`;
+  // ========== الرسالة ==========
+  let message = `📦 *طلب جديد من الموقع:*\n`;
+  message += `📍 *البلد:* ${country === "jordan" ? "الأردن" : "فلسطين"}\n`;
+  message += `🏘️ *المنطقة:* ${location}\n`;
+  message += `📞 *رقم الهاتف:* ${phone}\n\n`;
+  message += `🛍️ *المنتجات:*\n`;
 
   cart.forEach((item, idx) => {
-    message += `#${idx + 1} - ${item.name}\n`;
-    message += `اللون: ${item.color}, المقاس: ${item.size}, السعر: ${item.price}\n\n`;
+    message += `\n#${idx + 1} - ${item.name}\n`;
+    message += `- اللون: ${item.color}\n`;
+    message += `- المقاس: ${item.size}\n`;
+    message += `- السعر: ${item.price}\n`;
   });
 
-  message += `الإجمالي: ${total.toFixed(2)} JD\n`;
-  message += `تكلفة التوصيل حسب المنطقة: ${extra.toFixed(2)} JD\n`;
-  message += `السعر النهائي: ${finalPrice.toFixed(2)} JD`;
+  message += `\n💰 *الإجمالي:* ${total.toFixed(2)} JD`;
+  message += `\n🚚 *التوصيل:* ${extra.toFixed(2)} JD`;
+  message += `\n🧾 *السعر النهائي:* ${finalPrice.toFixed(2)} JD`;
 
-  // إرسال الرسالة لتليجرام عبر API بوت
+  // إرسال الرسالة
   fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       chat_id: TELEGRAM_CHAT_ID,
-      text: message
+      text: message,
+      parse_mode: "Markdown"
     })
   })
   .then(res => res.json())
   .then(data => {
     if (data.ok) {
-      // إظهار نافذة الشكر
       document.getElementById("thankYouModal").style.display = "flex";
-      // تنظيف السلة
       localStorage.removeItem("cart");
       displayCart();
-      // إغلاق مودال الطلب
       closeOrderModal();
     } else {
-      alert("حدث خطأ أثناء إرسال الطلب، حاول مرة أخرى.");
+      alert("فشل في إرسال الطلب.");
       console.error(data);
     }
   })
   .catch(err => {
-    alert("فشل الاتصال بتلجرام. تحقق من الانترنت وحاول مجدداً.");
+    alert("خطأ بالاتصال. حاول لاحقاً.");
     console.error(err);
   });
 });
 
-// زر إغلاق نافذة الشكر مع إرسال التقييم لتليجرام
+// ========== التقييم ==========
 document.getElementById("closeThankYou").addEventListener("click", () => {
-  // تجهيز رسالة التقييم
-  let ratingMessage = "";
-  if (selectedRating === 0) {
-    ratingMessage = "التقييم: لم يتم التقييم";
-  } else {
-    ratingMessage = `التقييم: ${selectedRating} من 5 نجوم`;
-  }
+  const ratingMessage = selectedRating
+    ? `⭐ تم تقييم الطلب: ${selectedRating} نجوم`
+    : "📭 لم يتم تقييم الطلب";
 
-  // إرسال التقييم لتليجرام
   fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       chat_id: TELEGRAM_CHAT_ID,
       text: ratingMessage
     })
   })
-  .then(res => res.json())
-  .then(data => {
-    if (!data.ok) {
-      console.error("فشل إرسال التقييم:", data);
-    }
-    // إغلاق نافذة الشكر بغض النظر عن نتيجة الإرسال
-    document.getElementById("thankYouModal").style.display = "none";
-  })
-  .catch(err => {
-    console.error("خطأ في الاتصال أثناء إرسال التقييم:", err);
+  .finally(() => {
     document.getElementById("thankYouModal").style.display = "none";
   });
 });
@@ -227,29 +204,20 @@ let selectedRating = 0;
 
 if (starRating) {
   const stars = starRating.querySelectorAll("span");
-
   stars.forEach(star => {
-    star.addEventListener("mouseenter", () => {
-      const val = parseInt(star.getAttribute("data-value"));
-      highlightStars(val);
-    });
-
-    star.addEventListener("mouseleave", () => {
-      highlightStars(selectedRating);
-    });
-
+    star.addEventListener("mouseenter", () => highlightStars(parseInt(star.dataset.value)));
+    star.addEventListener("mouseleave", () => highlightStars(selectedRating));
     star.addEventListener("click", () => {
-      selectedRating = parseInt(star.getAttribute("data-value"));
+      selectedRating = parseInt(star.dataset.value);
       highlightStars(selectedRating);
-      console.log("تم اختيار تقييم: " + selectedRating + " نجوم");
     });
   });
 
   function highlightStars(rating) {
     stars.forEach(star => {
-      const val = parseInt(star.getAttribute("data-value"));
+      const val = parseInt(star.dataset.value);
       star.textContent = val <= rating ? "★" : "☆";
-      star.style.color = val <= rating ? "#f39c12" : "black";
+      star.style.color = val <= rating ? "#f39c12" : "#000";
     });
   }
 
