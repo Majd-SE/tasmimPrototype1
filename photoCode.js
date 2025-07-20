@@ -1,6 +1,6 @@
-// العناصر الأساسية
+// === العناصر الأساسية ===
 const modal = document.getElementById("productModal");
-const closeModal = document.querySelector(".close-modal");
+const closeModalBtn = document.querySelector(".close-modal");
 const mainImage = document.getElementById("mainModalImage");
 const productNameEl = document.getElementById("modalProductName");
 const colorContainer = document.getElementById("modalColors");
@@ -12,7 +12,7 @@ const confirmAddToCart = document.getElementById("confirmAddToCart");
 // إخفاء شاشة التحميل عند تحميل الصفحة
 window.addEventListener('load', () => {
   const loadingScreen = document.getElementById('loadingScreen');
-  loadingScreen.style.display = 'none';
+  if (loadingScreen) loadingScreen.style.display = 'none';
 });
 
 let productImages = [];
@@ -35,32 +35,59 @@ function showToast(message) {
   }, 2000);
 }
 
-// تحديث الصورة
+// تحديث الصورة مع أنيميشن السوايب (fade + slide)
 function updateImage(newIndex) {
-  mainImage.classList.add("fade-out");
-  setTimeout(() => {
+  if (newIndex === currentImageIndex) return; // لو نفس الصورة ما نعمل شيء
+
+  // تحديد اتجاه السلايد (يمين أو يسار)
+  let slideOutClass, slideInClass;
+  if (newIndex > currentImageIndex || (newIndex === 0 && currentImageIndex === productImages.length - 1)) {
+    slideOutClass = "slide-out-left";
+    slideInClass = "slide-in-right";
+  } else {
+    slideOutClass = "slide-out-right";
+    slideInClass = "slide-in-left";
+  }
+
+  // إضافة أنيميشن خروج
+  mainImage.classList.add(slideOutClass);
+
+  // بعد انتهاء أنيميشن الخروج، تغيير الصورة وبدأ أنيميشن الدخول
+  mainImage.addEventListener("animationend", function handler() {
+    mainImage.removeEventListener("animationend", handler);
+
     currentImageIndex = newIndex;
     mainImage.src = productImages[currentImageIndex];
-    mainImage.classList.remove("fade-out");
-    mainImage.classList.add("fade-in");
-    setTimeout(() => {
-      mainImage.classList.remove("fade-in");
-    }, 300);
-  }, 300);
+
+    mainImage.classList.remove(slideOutClass);
+    mainImage.classList.add(slideInClass);
+
+    // إزالة أنيميشن الدخول بعد انتهائه
+    mainImage.addEventListener("animationend", function handlerIn() {
+      mainImage.removeEventListener("animationend", handlerIn);
+      mainImage.classList.remove(slideInClass);
+    });
+  });
 }
 
-// فتح المودال
+// فتح المودال مع حركة slide-in + fade-in
 function openModal(product) {
   modal.style.display = "flex";
-  modal.classList.remove("fade-out");
-  modal.classList.add("fade-in");
+
+  // إزالة أي أنيميشن خروج وإضافة دخول
+  modal.classList.remove("slide-out");
+  modal.classList.add("slide-in");
 
   productNameEl.textContent = product.name;
   productImages = product.images;
   currentImageIndex = 0;
   mainImage.src = productImages[currentImageIndex];
 
-  // الألوان
+  // إعادة تعيين التحديدات السابقة
+  selectedColor = "";
+  selectedSize = "";
+
+  // إعداد أزرار الألوان
   colorContainer.innerHTML = "";
   product.colors.forEach(color => {
     const btn = document.createElement("button");
@@ -74,7 +101,7 @@ function openModal(product) {
     colorContainer.appendChild(btn);
   });
 
-  // المقاسات
+  // إعداد أزرار المقاسات
   sizeContainer.innerHTML = "";
   product.sizes.forEach(size => {
     const btn = document.createElement("button");
@@ -89,31 +116,27 @@ function openModal(product) {
   });
 
   window.productPrice = product.price || "غير محدد";
-  selectedColor = "";
-  selectedSize = "";
 }
 
-// إغلاق المودال عند الضغط على X
-closeModal.addEventListener("click", () => {
-  modal.classList.remove("fade-in");
-  modal.classList.add("fade-out");
+// إغلاق المودال مع حركة slide-out + fade-out
+function closeModalFunc() {
+  modal.classList.remove("slide-in");
+  modal.classList.add("slide-out");
+
   setTimeout(() => {
     modal.style.display = "none";
-  }, 300);
-});
+  }, 300); // مدة الأنيميشن متوافقة مع CSS
+}
 
-// إغلاق المودال عند الضغط خارج المودال
+closeModalBtn.addEventListener("click", closeModalFunc);
+
 modal.addEventListener("click", (e) => {
   if (e.target === modal) {
-    modal.classList.remove("fade-in");
-    modal.classList.add("fade-out");
-    setTimeout(() => {
-      modal.style.display = "none";
-    }, 300);
+    closeModalFunc();
   }
 });
 
-// أسهم الصور
+// أسهم الصور (يمين ويسار)
 leftArrow.addEventListener("click", () => {
   let newIndex = (currentImageIndex - 1 + productImages.length) % productImages.length;
   updateImage(newIndex);
@@ -123,7 +146,7 @@ rightArrow.addEventListener("click", () => {
   updateImage(newIndex);
 });
 
-// دعم السحب لتغيير الصور
+// دعم السحب لتغيير الصور (سوايب)
 let touchStartX = 0;
 let touchEndX = 0;
 
@@ -168,11 +191,7 @@ confirmAddToCart.addEventListener("click", () => {
 
   showToast("تمت الإضافة إلى السلة");
 
-  modal.classList.remove("fade-in");
-  modal.classList.add("fade-out");
-  setTimeout(() => {
-    modal.style.display = "none";
-  }, 300);
+  closeModalFunc();
 });
 
 // عرض المنتج من زر view
@@ -189,10 +208,9 @@ document.querySelectorAll(".bu1").forEach(button => {
   });
 });
 
-// عرض المنتج عند الضغط على الكرت كامل
+// عرض المنتج عند الضغط على الكرت كامل (باستثناء زر الإضافة)
 document.querySelectorAll(".clickable-card").forEach(card => {
   card.addEventListener("click", (e) => {
-    // حتى ما يشتغل لما نضغط على زر view نفسه
     if (e.target.tagName.toLowerCase() === "button") return;
 
     const btn = card.querySelector(".bu1");
